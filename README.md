@@ -1,4 +1,4 @@
-# Fastq Downloader
+# Fastq Downloader (WIP)
 This python package let you download fastq files from ena.
 It can automatic merge and rename fastq files based on the input file provided.
 
