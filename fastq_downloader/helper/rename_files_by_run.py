@@ -32,7 +32,6 @@ def write_filename_to_dict(subdict: dict):
     for ascp_link, orig_name, new_name in zip(link_list, orig_names, new_name):
         ascp_dict[ascp_link]["orig_name"] = orig_name
         ascp_dict[ascp_link]["new_name"] = new_name
-        ascp_dict["merged_file_name"] = merged_file_name
     subdict["ascp"] = ascp_dict
     subdict["paried"]=paired
     return subdict
