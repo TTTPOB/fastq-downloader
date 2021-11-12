@@ -35,7 +35,7 @@ def srr2link_md5(srr: str) -> zip:
     ftp_links = srr_info[0]["fastq_ftp"].split(";")
     fastq_md5 = srr_info[0]["fastq_md5"].split(";")
     ascp_links = [
-        link.replace("ftp.sra.ebi.ac.uk/", "era-ascp@fasp.sra.ebi.ac.uk:")
+        link.replace("ftp.sra.ebi.ac.uk/", "era-fasp@fasp.sra.ebi.ac.uk:")
         for link in ftp_links
     ]
 
@@ -45,7 +45,7 @@ def srr2link_md5(srr: str) -> zip:
 def gsm2srx(gsm: str):
     gsm_url = f"https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={gsm}&targ=self&form=xml&view=quick"
 
-    gsm_xml = httpx.get(gsm_url).text
+    gsm_xml = httpx.get(gsm_url).content
     gsm_xml = ET.fromstring(gsm_xml)
     namespace = gsm_xml.tag.split("}")[0] + "}"
 

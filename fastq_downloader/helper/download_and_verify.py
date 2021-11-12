@@ -2,7 +2,7 @@ import subprocess
 from pathlib import Path
 import hashlib
 
-ASCP_PORT = 330001
+ASCP_PORT = 33001
 
 
 def invoke_ascp(link: str, privkey: str = None, out_dir: str = "."):
@@ -28,6 +28,7 @@ def check_file(file_path: str, md5: str, blocksize=2 ** 20):
     """
     Checks if the file at the given path has the given md5.
     """
+    file_path = Path(file_path)
     if not file_path.exists():
         raise Exception("file not found")
     with open(file_path, "rb") as f:
@@ -47,7 +48,7 @@ def download_and_verify(ascp_dict: dict, privkey: str = None, out_dir: str = "."
     """
     Downloads the given link and verifies it with the given md5.
     """
-    for links, info in ascp_dict.items():
-        for link in links:
-            invoke_ascp(link, privkey, out_dir)
-            check_file(out_dir + "/" + info["filename"], info["md5"])
+    for link, info in ascp_dict.items():
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        invoke_ascp(link, privkey, out_dir)
+        check_file(out_dir + "/" + info["orig_name"], info["md5"])
