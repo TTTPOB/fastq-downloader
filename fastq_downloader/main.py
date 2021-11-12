@@ -18,7 +18,13 @@ import click
     "--parallel",
     "-p",
     default=4,
-    help="number of accession to download, note the granular of parallel is the first level accesion",
+    help="number of accession to download, note the granular of parallel is the first level accesion(gsm/srx)",
+)
+@click.option(
+    "--parallel2",
+    "-pp",
+    default=4,
+    help="number of accession to download, note the granular of parallel is the second level accesion(srr)",
 )
 @click.option(
     "--merge",
@@ -26,7 +32,7 @@ import click
     default=True,
     help="merge the downloaded files or not" + "implies rename",
 )
-def main(info, out, rename, privkey, parallel, merge):
+def main(info, out, rename, privkey, parallel, merge, parallel2):
     if merge:
         rename = True
     infodict = infotsv_to_dict(info)
@@ -37,7 +43,15 @@ def main(info, out, rename, privkey, parallel, merge):
 
     p = Pool(parallel)
     ascp_dict_list = [x["ascp"] for x in infodict.values()]
-    # p.starmap(download_and_verify, zip(ascp_dict_list, [privkey]* len(ascp_dict_list), out* len(ascp_dict_list)))
+    p.starmap(
+        download_and_verify,
+        zip(
+            ascp_dict_list,
+            [privkey] * len(ascp_dict_list),
+            [out] * len(ascp_dict_list),
+            [parallel2] * len(ascp_dict_list),
+        ),
+    )
 
     if rename:
         for acc, subdict in infodict.items():

@@ -1,6 +1,7 @@
 import subprocess
 from pathlib import Path
 import hashlib
+from multiprocessing import Pool
 
 ASCP_PORT = 33001
 
@@ -44,11 +45,30 @@ def check_file(file_path: str, md5: str, blocksize=2 ** 20):
         raise Exception("md5 does not match")
 
 
-def download_and_verify(ascp_dict: dict, privkey: str = None, out_dir: str = "."):
+def download_and_verify__(link, info, privkey, out_dir):
+    invoke_ascp(link, privkey, out_dir)
+    check_file(out_dir + "/" + info["orig_name"], info["md5"])
+
+
+def download_and_verify(ascp_dict: dict, privkey: str = None, out_dir: str = ".", parallel2:int = 4):
     """
     Downloads the given link and verifies it with the given md5.
     """
-    for link, info in ascp_dict.items():
-        Path(out_dir).mkdir(parents=True, exist_ok=True)
-        invoke_ascp(link, privkey, out_dir)
-        check_file(out_dir + "/" + info["orig_name"], info["md5"])
+    # p = Pool(parallel2)
+    # p.starmap(
+    #     download_and_verify__,
+    #     zip(
+    #         ascp_dict.keys(),
+    #         ascp_dict.values(),
+    #         [privkey] * len(ascp_dict.keys()),
+    #         [out_dir] * len(ascp_dict.keys()),
+    #     )
+    # )
+    for link, info, privkey, out_dir in zip(
+        ascp_dict.keys(),
+        ascp_dict.values(),
+        [privkey] * len(ascp_dict.keys()),
+        [out_dir] * len(ascp_dict.keys()),
+    ):
+        download_and_verify__(link, info, privkey, out_dir)
+    

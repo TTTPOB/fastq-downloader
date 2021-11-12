@@ -23,7 +23,7 @@ def write_filename_to_dict(subdict: dict):
     else:
         srrlist = list([name.split(".")[0] for name in orig_names])
     count_run = len(set(srrlist))
-    srr2run_map = dict(zip(set(srrlist), range(1,count_run+1)))
+    srr2run_map = dict(zip(set(srrlist), range(1, count_run + 1)))
     new_name = [
         orig_name.replace(srr, f"{desp}_run{srr2run_map[srr]}")
         for orig_name, srr in zip(orig_names, srrlist)
@@ -34,7 +34,7 @@ def write_filename_to_dict(subdict: dict):
         ascp_dict[ascp_link]["orig_name"] = orig_name
         ascp_dict[ascp_link]["new_name"] = new_name
     subdict["ascp"] = ascp_dict
-    subdict["paired"]=paired
+    subdict["paired"] = paired
     return subdict
 
 

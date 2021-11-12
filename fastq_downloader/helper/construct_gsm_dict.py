@@ -1,4 +1,6 @@
 from helper.accession_to_links import gsm2link_md5, srx2link_md5
+
+
 def infotsv_to_dict(tsv_file):
     """
     Converts a tsv file with the following columns:
@@ -9,7 +11,7 @@ def infotsv_to_dict(tsv_file):
     with open(tsv_file, "r") as tsv:
         for line in tsv:
             line = line.strip().split("\t")
-            infodict[line[0]] = {"desp": line[1].replace(" ","_")}
+            infodict[line[0]] = {"desp": line[1].replace(" ", "_")}
     return infodict
 
 
@@ -25,6 +27,7 @@ def parse_acc_type(infodict):
         else:
             ValueError("I can only eat GSM or SRX acsession number!")
     return infodict
+
 
 def get_link_md5(infodict):
     for acc, info in infodict.items():

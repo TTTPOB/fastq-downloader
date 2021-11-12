@@ -1,4 +1,3 @@
-from re import sub
 import shutil
 from pathlib import Path
 

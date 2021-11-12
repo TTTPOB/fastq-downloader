@@ -86,6 +86,7 @@ def gsm2link_md5(gsm: str):
     ascp_dict = srx2link_md5(srx)
     return ascp_dict
 
+
 if __name__ == "__main__":
-    t1=srx2link_md5("SRX764940")
+    t1 = srx2link_md5("SRX764940")
     print(t1)
