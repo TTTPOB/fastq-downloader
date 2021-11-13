@@ -17,7 +17,9 @@ pip install thisname.whl
 ## then go to vim, type :set paste to get into paste mode, paste the table into vim,
 ## save the file as whatever name you want, then exit vim
 ## the white space will be auto convert to underscore
-snakemake -s path/to/thisname.sml -j16 --config infotsv=infotsv output_dir=output refresh_acc=False -p
+## refresh_acc need to be True for the first time run, and then if you don't want to query again the accesion number,
+## leave it False
+snakemake -s path/to/thisname.sml -j16 --config infotsv=infotsv output_dir=output refresh_acc=True -p
 ```
 
 ## todo
