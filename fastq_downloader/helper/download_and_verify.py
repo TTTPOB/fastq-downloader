@@ -20,8 +20,9 @@ def invoke_ascp(link: str, privkey: str = None, out_dir: str = "."):
         privkey = ascp_bin_path.parent.parent / "etc" / "asperaweb_id_dsa.openssh"
     if not privkey.exists():
         raise Exception("private key not found")
+    orig_name = Path(link).name
     # invoke ascp
-    ascp_command = f"ascp -i {privkey} -P {ASCP_PORT} -Q {link} {out_dir}"
+    ascp_command = f"ascp -i {privkey} -P {ASCP_PORT} -Q {link} ./{out_dir}/{orig_name}"
     subprocess.run(ascp_command, shell=True)
 
 

@@ -1,4 +1,4 @@
-from helper.accession_to_links import gsm2link_md5, srx2link_md5
+from .accession_to_links import gsm2link_md5, srx2link_md5
 
 
 def infotsv_to_dict(tsv_file):

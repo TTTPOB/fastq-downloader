@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-from helper.rename_files_by_run import write_filename_to_dict, actual_rename
-from helper.download_and_verify import download_and_verify, invoke_ascp
-from helper.construct_gsm_dict import infotsv_to_dict, get_link_md5, parse_acc_type
-from helper.merge_files import merge_files
+from .helper.rename_files_by_run import write_filename_to_dict, actual_rename
+from .helper.download_and_verify import download_and_verify, invoke_ascp
+from .helper.construct_gsm_dict import infotsv_to_dict, get_link_md5, parse_acc_type
+from .helper.merge_files import merge_files
 from multiprocessing import Pool
 import click
 

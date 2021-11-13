@@ -6,15 +6,15 @@ authors = ["tpob <tpob@tpob.xyz>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-httpx = "^0.20.0"
-beautifulsoup4 = "^4.10.0"
-click = "^8.0.3"
-lxml = "^4.6.4"
+python = ">=3.8, <4.0"
+httpx = "*"
+beautifulsoup4 = "*"
+click = "*"
+lxml = "*"
 
 [tool.poetry.dev-dependencies]
-black = "^21.10b0"
-ipython = "^7.29.0"
+black = "*"
+ipython = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
