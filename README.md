@@ -3,6 +3,7 @@ use this [snakemake script](https://gist.github.com/TTTPOB/1a8a960474a6a784f2da2
 
 This python package let you download fastq files from ena.
 It can automatic merge and rename fastq files based on the input file provided.
+If you have trouble downloading this repo's release, please go to [fastgit](https://fastgit.org)
 
 ## How to use
 auto merge multiple files of paired end reads are not tested now, but should be usable
