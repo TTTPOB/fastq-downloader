@@ -4,10 +4,19 @@ from .helper.download_and_verify import download_and_verify, invoke_ascp
 from .helper.construct_gsm_dict import infotsv_to_dict, get_link_md5, parse_acc_type
 from .helper.merge_files import merge_files
 from multiprocessing import Pool
+import importlib.resources as pkg_resources
+from . import snakemake
+import subprocess
+from pathlib import Path
 import click
 
 
-@click.command()
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
 @click.option(
     "--info", "-in", default="info.tsv", help="iinput information file, must be a tsv"
 )
@@ -61,5 +70,59 @@ def main(info, out, rename, privkey, parallel, merge, parallel2):
             merge_files(subdict, out)
 
 
+@click.option(
+    "--info", "-i", default="info.tsv", help="iinput information file, must be a tsv"
+)
+@click.option("--out", "-o", default=".", help="output directory")
+@click.option(
+    "--refresh_acc",
+    "-r",
+    default=False,
+    help="refresh the accession number parse result, \
+    note this will trigger the input file timestamp change thus \
+    triggers re-evaluation of all snakemake downloads",
+)
+@click.option(
+    "--threads",
+    "-t",
+    default=4,
+    help="threads snamekame using",
+)
+@click.option(
+    "--snakemake_options",
+    "-s",
+    default="",
+    help="options passed to snakemake",
+
+)
+@cli.command()
+def smk(info, out, refresh_acc, threads, snakemake_options):
+    try:
+        snakemake_path = (
+            subprocess.check_output(["which", "snakemake"]).decode("utf-8").strip()
+        )
+        if not Path(snakemake_path).exists():
+            FileNotFoundError("snakemake not found in path, please install it.")
+    except subprocess.CalledProcessError:
+        FileNotFoundError("snakemake not found in path, please install it.")
+    with pkg_resources.path(snakemake, "Snakefile") as snakefile_path:
+        command_list = [
+            "snakemake",
+            "-s",
+            f"{snakefile_path}",
+            "-j",
+            f"{threads}",
+            "--config",
+            f"infotsv={info}",
+            f"output_dir={out}",
+            f"refresh_acc={refresh_acc}",
+            "--reason",
+            "--keep-going",
+            snakemake_options
+        ]
+        command_string = " ".join(command_list)
+        subprocess.run(command_string, shell=True)
+
+
 if __name__ == "__main__":
-    main()
+    cli()
