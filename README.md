@@ -3,10 +3,9 @@ use this [snakemake script](https://gist.github.com/TTTPOB/1a8a960474a6a784f2da2
 
 This python package let you download fastq files from ena.
 It can automatic merge and rename fastq files based on the input file provided.
-specify the out dir is not working now
 
 ## How to use
-auto merge multiple files are not tested now
+auto merge multiple files of paired end reads are not tested now, but should be usable
 ```bash
 conda create --name fastq-download -c conda-forge -c hcc -c bioconda aspera-cli snakemake httpx lxml click beautifulsoup4 python=3.9
 ## use what ever you want to download the gist mentioned above to thisname.smk
@@ -19,14 +18,14 @@ pip install thisname.whl
 ## the white space will be auto convert to underscore
 ## refresh_acc need to be False if you don't want to query again the accesion number,
 ## or due to the recreation of the link file, all files are to be downloaded.
-snakemake -s path/to/thisname.sml -j16 --config infotsv=infotsv output_dir=output refresh_acc=True -p
+python3 -m fastq_download --infotsv thisname.tsv --outdir thisname --refresh_acc False
 ```
 
 ## todo
   - [ ] test for paired-end reads run merge
-  - [ ] if fail, retry
-  - [ ] use dag to run the pipeline
-  - [ ] option to resume download when md5 not match
-  - [ ] option to manually specify which to redownload
-  - [ ] option to continue from last time download
-  - [ ] implement second level parallelization
+  - [ ] publish to bioconda
+  - [x] if fail, retry
+  - [x] use dag to run the pipeline (sort of, implemented by using snakemake)
+  - [x] option to resume download when md5 not match
+  - [x] option to continue from last time download
+  - [x] implement second level parallelization
