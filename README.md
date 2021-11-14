@@ -19,8 +19,18 @@ pip install fastq-downloader==0.3.0
 ## the white space will be auto convert to underscore
 ## refresh_acc need to be False if you don't want to query again the accesion number,
 ## or due to the recreation of the link file(default set to false), all files are to be downloaded.
-python3 -m fastq_downloader smk --info thisname.tsv --out thisname --refresh_acc False
+fastq-downloader smk --info thisname.tsv --out thisname --refresh_acc False
 ```
+
+It will automatically try to download the file, check md5, retry if file integrity check failed, and merge the files if the number of files is more than 2, finally rename the files to the description you provided.
+
+prepare the info.tsv like this:
+note the file must be tab delimited (tsv file), you can simply achieve this by paste it from the Excel or GEO website. Or from SRA Run Selector downloaded csv file.
+```
+GSM12345  h3k9me3_rep1
+GSM12345  h3k9me3_rep2
+```
+
 
 ## todo
   - [ ] test for paired-end reads run merge
