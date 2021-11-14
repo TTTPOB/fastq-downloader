@@ -41,7 +41,7 @@ def cli():
     default=True,
     help="merge the downloaded files or not" + "implies rename",
 )
-def main(info, out, rename, privkey, parallel, merge, parallel2):
+def vanilla(info, out, rename, privkey, parallel, merge, parallel2):
     if merge:
         rename = True
     infodict = infotsv_to_dict(info)
@@ -123,6 +123,8 @@ def smk(info, out, refresh_acc, threads, snakemake_options):
         command_string = " ".join(command_list)
         subprocess.run(command_string, shell=True)
 
+def main():
+    cli()
 
 if __name__ == "__main__":
-    cli()
+    main()
