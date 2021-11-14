@@ -7,10 +7,10 @@ It can automatic merge and rename fastq files based on the input file provided.
 ## How to use
 auto merge multiple files of paired end reads are not tested now, but should be usable
 ```bash
-conda create --name fastq-download -c conda-forge -c hcc -c bioconda aspera-cli snakemake httpx lxml click beautifulsoup4 python=3.9
+conda create --name fastq-downloader -c conda-forge -c hcc -c bioconda aspera-cli snakemake httpx lxml click beautifulsoup4 python=3.9
 ## use what ever you want to download the gist mentioned above to thisname.smk
 ## download whl file from github release of this project to thisname.whl
-conda activate fastq-download
+conda activate fastq-downloader
 pip install thisname.whl
 ## make sure to create an infotsv before, you can just copy from the geo website,
 ## then go to vim, type :set paste to get into paste mode, paste the table into vim,
@@ -18,7 +18,7 @@ pip install thisname.whl
 ## the white space will be auto convert to underscore
 ## refresh_acc need to be False if you don't want to query again the accesion number,
 ## or due to the recreation of the link file, all files are to be downloaded.
-python3 -m fastq_download --infotsv thisname.tsv --outdir thisname --refresh_acc False
+python3 -m fastq_downloader --infotsv thisname.tsv --outdir thisname --refresh_acc False
 ```
 
 ## todo
