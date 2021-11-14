@@ -161,14 +161,16 @@ def get_downloaded_files(wildcards):
     ascp_checkpoint_dir = checkpoints.split_ascp_dict.get(**wildcards).output[0]
     mate = glob(f"{ascp_checkpoint_dir}/*")
     def get_output_path(outpath_list):
+        print(outpath_list, file = sys.stderr)
         result = []
         for outpath in outpath_list:
+            mate = re.search("R[\d_]", outpath)[0]
             result += expand(
-                tmp_dir + "/unmerged_fastq/{acc}/R1/{orig_name}",
+                tmp_dir + outpath,
                 acc=wildcards.acc,
                 orig_name=glob_wildcards(
                     os.path.join(
-                        tmp_dir, "ascp_split", wildcards.acc, "R1/{orig_name}.json"
+                        tmp_dir, "ascp_split", wildcards.acc, mate, "{orig_name}.json"
                     )
                 ).orig_name,
             )
@@ -176,58 +178,19 @@ def get_downloaded_files(wildcards):
 
     if len(mate) == 2:
         print(f"{wildcards.acc} is paired end, start downloading", file = sys.stderr)
-        outputs = expand(
-            tmp_dir + "/unmerged_fastq/{acc}/R1/{orig_name}",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R1/{orig_name}.json"
-                )
-            ).orig_name,
-        ) + expand(
-            tmp_dir + "/unmerged_fastq/{acc}/R2/{orig_name}",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R2/{orig_name}.json"
-                )
-            ).orig_name,
-        ) + expand(
-            tmp_dir + "/md5_lock/{acc}/R1/{orig_name}.lock",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R1/{orig_name}.json"
-                )
-            ).orig_name,
-        ) + expand(
-            tmp_dir + "/md5_lock/{acc}/R2/{orig_name}.lock",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R2/{orig_name}.json"
-                )
-            ).orig_name,
-        )
+        outputs = get_output_path([
+            "/unmerged_fastq/{acc}/R1/{orig_name}",
+            "/unmerged_fastq/{acc}/R2/{orig_name}",
+            "/md5_lock/{acc}/R1/{orig_name}.lock",
+            "/md5_lock/{acc}/R2/{orig_name}.lock"
+        ])
     if len(mate) == 1:
         print(f"{wildcards.acc} is single end", file = sys.stderr)
-        outputs = expand(
-            tmp_dir + "/unmerged_fastq/{acc}/R_/{orig_name}",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R_/{orig_name}.json"
-                )
-            ).orig_name,
-        ) + expand(
-            tmp_dir + "/md5_lock/{acc}/R_/{orig_name}.lock",
-            acc=wildcards.acc,
-            orig_name=glob_wildcards(
-                os.path.join(
-                    tmp_dir, "ascp_split", wildcards.acc, "R_/{orig_name}.json"
-                )
-            ).orig_name,
-        )
+        outputs = get_output_path([
+            "/unmerged_fastq/{acc}/R_/{orig_name}",
+            "/md5_lock/{acc}/R_/{orig_name}.lock"
+        ])
+        print(f"{outputs} \n\nOUTPUT", file = sys.stderr)
     return outputs
 
 
