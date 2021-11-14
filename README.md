@@ -1,5 +1,4 @@
 # Fastq Downloader (WIP)
-use this [snakemake script](https://gist.github.com/TTTPOB/1a8a960474a6a784f2da215b03ab3cc9) to get more fluent experience.
 
 This python package let you download fastq files from ena.
 It can automatic merge and rename fastq files based on the input file provided.
