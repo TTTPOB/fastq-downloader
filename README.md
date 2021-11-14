@@ -18,7 +18,7 @@ pip install fastq-downloader==0.2.1
 ## save the file as whatever name you want, then exit vim
 ## the white space will be auto convert to underscore
 ## refresh_acc need to be False if you don't want to query again the accesion number,
-## or due to the recreation of the link file, all files are to be downloaded.
+## or due to the recreation of the link file(default set to false), all files are to be downloaded.
 python3 -m fastq_downloader --infotsv thisname.tsv --outdir thisname --refresh_acc False
 ```
 
