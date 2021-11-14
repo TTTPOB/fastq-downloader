@@ -12,7 +12,7 @@ conda create --name fastq-downloader -c conda-forge -c hcc -c bioconda aspera-cl
 ## use what ever you want to download the gist mentioned above to thisname.smk
 ## download whl file from github release of this project to thisname.whl
 conda activate fastq-downloader
-pip install fastq-downloader==0.3.0
+pip install fastq-downloader==0.3.1
 ## make sure to create an infotsv before, you can just copy from the geo website,
 ## then go to vim, type :set paste to get into paste mode, paste the table into vim,
 ## save the file as whatever name you want, then exit vim
