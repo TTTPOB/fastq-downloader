@@ -18,6 +18,7 @@ import sys
 import subprocess
 import re
 import shutil
+from hashlib import md5
 
 # please invoke this script with --config set
 # infotsv, a tsv file specified accession number and description
@@ -42,8 +43,22 @@ if (not Path(tmp_dir).exists()) or refresh_acc:
     Path(tmp_dir).mkdir(exist_ok=True, parents=True)
     for acc, info in infodict.items():
         Path(tmp_dir, "acc_json").mkdir(exist_ok=True, parents=True)
-        with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "w") as f:
-            json.dump(info, f)
+        # check md5 of the file, if not equal, overwrite it
+        with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "rw") as f:
+            file_content = json.load(f)
+            # calculate md5 of the file
+            file_md5 = md5(file_content.encode("utf-8")).hexdigest()
+            # calculate md5 of the json
+            json_md5 = md5(json.dumps(info).encode("utf-8")).hexdigest()
+            # if not equal:
+            if file_md5 != json_md5:
+                # overwrite the file
+                json.dump(info, f)
+            elif:
+                # if equal, do nothing
+                # but alert the user
+                print(f"{acc} is already up to date", file=sys.stderr)
+                pass
 
 
 rule all:
