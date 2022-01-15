@@ -18,6 +18,7 @@ snakemake = {version = "^6.10.0", optional = true}
 black = "*"
 ipython = "*"
 twine = "^3.6.0"
+pytest = "*"
 
 [tool.poetry.scripts]
 fastq-downloader = "fastq_downloader.__main__:main"
