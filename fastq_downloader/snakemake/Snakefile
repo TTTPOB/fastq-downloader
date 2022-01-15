@@ -54,7 +54,7 @@ if (not Path(tmp_dir).exists()) or refresh_acc:
             if file_md5 != json_md5:
                 # overwrite the file
                 json.dump(info, f)
-            elif:
+            else:
                 # if equal, do nothing
                 # but alert the user
                 print(f"{acc} is already up to date", file=sys.stderr)
