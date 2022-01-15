@@ -44,12 +44,13 @@ if (not Path(tmp_dir).exists()) or refresh_acc:
     for acc, info in infodict.items():
         Path(tmp_dir, "acc_json").mkdir(exist_ok=True, parents=True)
         # check md5 of the file, if not equal, overwrite it
-        with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "rw") as f:
+        with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "r") as f:
             file_content = json.load(f)
             # calculate md5 of the file
             file_md5 = md5(file_content.encode("utf-8")).hexdigest()
             # calculate md5 of the json
             json_md5 = md5(json.dumps(info).encode("utf-8")).hexdigest()
+        with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "w") as f:
             # if not equal:
             if file_md5 != json_md5:
                 # overwrite the file
