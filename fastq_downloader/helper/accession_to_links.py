@@ -4,6 +4,8 @@ import json
 import re
 from bs4 import BeautifulSoup as bs
 from lxml import etree as ET
+from pathlib import Path
+import re
 
 
 def srx2srr(srx: str):
@@ -28,18 +30,44 @@ def srr2link_md5(srr: str) -> zip:
     """
     using ebi json query api to get the download link for a srr
     """
-    json_url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={srr}&result=read_run&format=json"
-    json_text = httpx.get(json_url).text
-    srr_info = json.loads(json_text)
-
-    ftp_links = srr_info[0]["fastq_ftp"].split(";")
-    fastq_md5 = srr_info[0]["fastq_md5"].split(";")
-    ascp_links = [
-        link.replace("ftp.sra.ebi.ac.uk/", "era-fasp@fasp.sra.ebi.ac.uk:")
-        for link in ftp_links
+    json_url = f"https://www.ebi.ac.uk/ena/portal/api/filereport"
+    json_fields = [
+        "library_layout",
+        "run_alias",
+        "fastq_bytes",
+        "fastq_md5",
+        "fastq_aspera",
     ]
+    data = {
+        "accession": srr,
+        "result": "read_run",
+        "format": "json",
+        "fields": ",".join(json_fields),
+    }
+    json_text = httpx.get(json_url, params=data).text
+    srr_info = json.loads(json_text)[0]
+    library_layout = srr_info["library_layout"]
+    md5list = srr_info["fastq_md5"].split(";")
+    ascp_links = srr_info["fastq_aspera"].split(";")
 
-    return zip(ascp_links, fastq_md5)
+    # filter out invalid links, which means not matched with library_layout
+    valid_links = []
+    valid_md5 = []
+    for md5, ascp_link in zip(md5list, ascp_links):
+        if library_layout == "PAIRED":
+            if ascp_link.endswith("_1.fastq.gz") or ascp_link.endswith("_2.fastq.gz"):
+                valid_links.append(ascp_link)
+                valid_md5.append(md5)
+        elif library_layout == "SINGLE":
+            if ascp_link.endswith(".fastq.gz"):
+                valid_links.append(ascp_link)
+                valid_md5.append(md5)
+        else:
+            raise ValueError(f"library_layout {library_layout} is not supported")
+
+    valid_links = [f"era-fasq@{link}" for link in valid_links]
+
+    return zip(valid_links, valid_md5)
 
 
 def gsm2srx(gsm: str):
