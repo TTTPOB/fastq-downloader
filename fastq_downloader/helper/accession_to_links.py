@@ -65,7 +65,7 @@ def srr2link_md5(srr: str) -> zip:
         else:
             raise ValueError(f"library_layout {library_layout} is not supported")
 
-    valid_links = [f"era-fasq@{link}" for link in valid_links]
+    valid_links = [f"era-ascp@{link}" for link in valid_links]
 
     return zip(valid_links, valid_md5)
 
