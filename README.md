@@ -39,3 +39,7 @@ GSM12345  h3k9me3_rep2
   - [x] option to resume download when md5 not match
   - [x] option to continue from last time download
   - [x] implement second level parallelization
+
+## update content
+  - 0.3.2:
+     - add filter for library layout (some sra entry has content mismatches its library layout)
