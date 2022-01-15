@@ -1,3 +1,4 @@
+# DO NOT USE IT TODAY, FIXING BROKEN CODE
 # Fastq Downloader (WIP)
 
 This python package let you download fastq files from ena.
