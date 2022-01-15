@@ -1,0 +1,3 @@
+[virtualenvs]
+path = "/home/tpob/miniconda3/envs/fastq-downloader"
+create = false
