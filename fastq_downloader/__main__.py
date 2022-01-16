@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 from .helper.rename_files_by_run import write_filename_to_dict, actual_rename
 from .helper.download_and_verify import download_and_verify, invoke_ascp
-from .helper.construct_gsm_dict import infotsv_to_dict, get_link_md5, parse_acc_type
+from .helper.construct_gsm_dict import (
+    infotsv_to_dict,
+    get_link_md5,
+    parse_acc_type,
+    breakdown_infotsv as breakdown_infotsv_func,
+)
 from .helper.merge_files import merge_files
 from multiprocessing import Pool
 import importlib.resources as pkg_resources
@@ -129,6 +134,21 @@ def smk(info, out, refresh_acc, threads, snakemake_options, download_backend):
         ]
         command_string = " ".join(command_list)
         subprocess.run(command_string, shell=True)
+
+
+@cli.command()
+@click.option(
+    "--infotsv", "-i", default="info.tsv", help="iinput information file, must be a tsv"
+)
+@click.option("--out-dir", "-o", default=".", help="output directory")
+@click.option(
+    "--refresh-acc",
+    "-r",
+    default=False,
+    help="refresh the accession number parse result",
+)
+def breakdown_infotsv(infotsv, out_dir, refresh_acc):
+    breakdown_infotsv_func(infotsv, out_dir, refresh_acc)
 
 
 def main():
