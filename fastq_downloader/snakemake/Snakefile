@@ -9,7 +9,7 @@ from fastq_downloader.helper.rename_files_by_run import (
     actual_rename,
 )
 from fastq_downloader.helper.merge_files import merge_files
-from fastq_downloader.helper.accession_to_links import gsm2link_md5, srx2link_md5
+from fastq_downloader.helper.accession_to_links import get_link_md5
 from pathlib import Path
 import json
 from glob import glob
@@ -26,6 +26,15 @@ from hashlib import md5
 infotsv = config["infotsv"]
 output_dir = config.get("output_dir", ".")
 refresh_acc = config.get("refresh_acc", False)
+download_backend = config.get("download_backend", "ascp")
+if download_backend == "ascp":
+    ASCP=True
+    print("using ascp", file = sys.stderr)
+elif download_backend == "wget":
+    ASCP=False
+    print("using wget", file = sys.stderr)
+else:
+    raise ValueError(f"download_backend must be ascp or wget, your choice is {download_backend}")
 retry = config.get("retry", 3)
 tmp_dir = Path(output_dir, ".tmp")
 tmp_dir = str(tmp_dir)
@@ -49,10 +58,12 @@ for acc, info in infodict.items():
         with open(Path(tmp_dir, "acc_json", acc + ".json"), "r") as f:
             print(f"orig file content {f.read()}")
             md5_old = md5(f.read().encode("utf-8")).hexdigest()
+            print(f"old md5: {md5_old} for {acc}")
     else:
         md5_old = ""
     # calculate md5 of the json
     json_md5 = md5(json.dumps(info).encode("utf-8")).hexdigest()
+    print(f"new md5: {json_md5} for {acc}")
     with open(Path(tmp_dir, "acc_json", f"{acc}.json"), "w") as f:
         # if not equal:
         if md5_old != json_md5:
@@ -84,14 +95,7 @@ rule get_dict_with_ascp:
     run:
         with open(input[0]) as f:
             info = json.load(f)
-        if info["type"] == "srx":
-            info["ascp"] = srx2link_md5(wildcards.acc)
-        elif info["type"] == "gsm":
-            info["ascp"] = gsm2link_md5(wildcards.acc)
-        else:
-            ValueError(
-                "accession type is not gsm or srx (please note the letter should be lower case)"
-            )
+        info["ascp"] = get_link_md5(wildcards.acc, info["type"], ASCP)
         with open(output[0], "w") as f:
             json.dump(info, f)
 

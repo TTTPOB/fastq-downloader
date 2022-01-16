@@ -1,4 +1,4 @@
-from .accession_to_links import gsm2link_md5, srx2link_md5
+from .accession_to_links import get_link_md5
 
 
 def infotsv_to_dict(tsv_file):
@@ -31,10 +31,5 @@ def parse_acc_type(infodict):
 
 def get_link_md5(infodict):
     for acc, info in infodict.items():
-        if info["type"] == "srx":
-            infodict[acc]["ascp"] = srx2link_md5(acc)
-        elif info["type"] == "gsm":
-            infodict[acc]["ascp"] = gsm2link_md5(acc)
-        else:
-            ValueError("I can only eat GSM or SRX acsession number!")
+        infodict[acc]["ascp"] = get_link_md5(acc, info["type"])
     return infodict

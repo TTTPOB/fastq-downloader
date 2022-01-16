@@ -89,14 +89,20 @@ def vanilla(info, out, rename, privkey, parallel, merge, parallel2):
     help="threads snamekame using",
 )
 @click.option(
+    "--download-backend",
+    "--backend",
+    default="ascp",
+    help="backend to use for downloading, \
+    currently only supports ascp, and wget",
+)
+@click.option(
     "--snakemake_options",
     "-s",
     default="",
     help="options passed to snakemake",
-
 )
 @cli.command()
-def smk(info, out, refresh_acc, threads, snakemake_options):
+def smk(info, out, refresh_acc, threads, snakemake_options, download_backend):
     try:
         snakemake_path = (
             subprocess.check_output(["which", "snakemake"]).decode("utf-8").strip()
@@ -116,15 +122,18 @@ def smk(info, out, refresh_acc, threads, snakemake_options):
             f"infotsv={info}",
             f"output_dir={out}",
             f"refresh_acc={refresh_acc}",
+            f"download_backend={download_backend}",
             "--reason",
             "--keep-going",
-            snakemake_options
+            snakemake_options,
         ]
         command_string = " ".join(command_list)
         subprocess.run(command_string, shell=True)
 
+
 def main():
     cli()
+
 
 if __name__ == "__main__":
     main()
