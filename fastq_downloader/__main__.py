@@ -98,7 +98,7 @@ def vanilla(info, out, rename, privkey, parallel, merge, parallel2):
     "--backend",
     default="ascp",
     help="backend to use for downloading, \
-    currently only supports ascp, and wget",
+    currently only supports ascp, wget, and aria2c",
 )
 @click.option(
     "--snakemake_options",
@@ -146,6 +146,7 @@ def smk(info, out, refresh_acc, threads, snakemake_options, download_backend):
     "-r",
     default=False,
     help="refresh the accession number parse result",
+    is_flag=True,
 )
 def breakdown_infotsv(infotsv, out_dir, refresh_acc):
     breakdown_infotsv_func(infotsv, out_dir, refresh_acc)

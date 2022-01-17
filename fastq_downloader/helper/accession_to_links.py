@@ -71,6 +71,7 @@ def srr2link_md5(srr: str) -> zip:
             raise ValueError(f"library_layout {library_layout} is not supported")
 
     valid_links = [f"era-fasp@{link}" for link in valid_links]
+    valid_ftp_links = [f"https://{link}" for link in valid_ftp_links]
 
     return zip(valid_links, valid_ftp_links, valid_md5)
 

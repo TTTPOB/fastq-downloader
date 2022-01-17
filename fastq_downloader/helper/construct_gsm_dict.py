@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from hashlib import md5
 import json
+import shutil
 
 
 def infotsv_to_dict(tsv_file):
@@ -45,7 +46,7 @@ def breakdown_infotsv(
 ) -> dict:
     tmp_dir = f"{out_dir}/.tmp"
     if refresh_acc:
-        os.remove(Path(tmp_dir))
+        shutil.rmtree(Path(tmp_dir))
     infodict = infotsv_to_dict(info_tsv_path)
     infodict = parse_acc_type(infodict)
     Path(tmp_dir).mkdir(exist_ok=True, parents=True)

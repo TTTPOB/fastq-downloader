@@ -42,6 +42,24 @@ def invoke_wget(link: str, out_dir: str = "."):
     subprocess.run(wget_command, shell=True)
 
 
+def invoke_aria2(link: str, out_dir: str = "."):
+    """
+    Invokes the aria2 command with the given link.
+    """
+    # try to get path to wget binary
+    aria2_bin_path = (
+        subprocess.check_output(["which", "aria2c"]).decode("utf-8").strip()
+    )
+    if aria2_bin_path == "":
+        raise Exception("aria2 binary not found")
+    aria2_bin_path = Path(aria2_bin_path)
+    # file name
+    file_name = Path(link).name
+    # invoke wget
+    aria2_command = f"aria2c --file-allocation=none -x16 -s16 -k 1m -o {Path(out_dir)/file_name} {link}"
+    subprocess.run(aria2_command, shell=True)
+
+
 def check_file(file_path: str, md5: str, blocksize=2 ** 20):
     """
     Checks if the file at the given path has the given md5.
@@ -62,12 +80,17 @@ def check_file(file_path: str, md5: str, blocksize=2 ** 20):
         raise Exception("md5 does not match")
 
 
-def download_and_verify__(link: str, info: dict, privkey: str, out_dir: str):
-    if link.startswith("ftp"):
+def download_and_verify__(
+    link: str, info: dict, privkey: str, out_dir: str, download_backend: str = "ascp"
+):
+    if download_backend == "wget":
         invoke_wget(link, out_dir)
         check_file(out_dir + "/" + Path(link).name, info["md5"])
-    elif link.startswith("era-fasp"):
+    elif download_backend == "ascp":
         invoke_ascp(link, privkey, out_dir)
+        check_file(out_dir + "/" + Path(link).name, info["md5"])
+    elif download_backend == "aria2":
+        invoke_aria2(link, out_dir)
         check_file(out_dir + "/" + Path(link).name, info["md5"])
     else:
         raise Exception("I can only download ftp or era-fasp(ascp) links")

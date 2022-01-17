@@ -19,6 +19,8 @@ import subprocess
 import re
 import shutil
 from hashlib import md5
+from random import random
+import time
 
 # please invoke this script with --config set
 # infotsv, a tsv file specified accession number and description
@@ -30,11 +32,11 @@ download_backend = config.get("download_backend", "ascp")
 if download_backend == "ascp":
     ASCP=True
     # print("using ascp", file = sys.stderr)
-elif download_backend == "wget":
+elif download_backend in ["wget", "aria2"]:
     ASCP=False
     # print("using wget", file = sys.stderr)
 else:
-    raise ValueError(f"download_backend must be ascp or wget, your choice is {download_backend}")
+    raise ValueError(f"download_backend must be ascp, wget or aria2, your choice is {download_backend}")
 retry = config.get("retry", 3)
 tmp_dir = Path(output_dir, ".tmp")
 tmp_dir = str(tmp_dir)
@@ -65,6 +67,9 @@ rule get_dict_with_ascp:
     run:
         with open(input[0]) as f:
             info = json.load(f)
+        # add sleep time to prevent ncbi flood protect
+        sleep_time = random() * 10
+        time.sleep(sleep_time)
         info["ascp"] = get_link_md5(wildcards.acc, info["type"], ASCP)
         with open(output[0], "w") as f:
             json.dump(info, f)
@@ -123,7 +128,7 @@ rule download_for_r1:
                     link = info["link"]
                     orig_name = info["orig_name"]
                     outdir = str(Path(output[0]).parent)
-                    download_and_verify__(link, info, ascp_privkey, outdir)
+                    download_and_verify__(link, info, ascp_privkey, outdir, download_backend)
                     passed = True
                     break
             except Exception as e:
