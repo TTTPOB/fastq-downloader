@@ -14,7 +14,7 @@ If you are reading this from pypi, please go to [github](https://github.com/TTTP
 conda create --name fastq-downloader -c conda-forge -c hcc -c bioconda aspera-cli snakemake-minimal httpx lxml click beautifulsoup4 python=3.9
 ## use what ever you want to download the gist mentioned above to thisname.smk
 conda activate fastq-downloader
-pip install fastq-downloader==0.4.3
+pip install fastq-downloader==0.4.4
 ```
 
 ### Usage
@@ -118,6 +118,9 @@ GSM12345  h3k9me3_rep2
 - Will fail to download the files contains both paired-end reads and single-end reads. (yes it exists).
 
 ## Update Content
+- 0.4.4:
+  - Bump version to trigger pypi readme update
+  - Fix version number.  
 - 0.4.3:
   - Update readme.
   - Breakdown the download process to two steps and add new download backend and `wget`.
